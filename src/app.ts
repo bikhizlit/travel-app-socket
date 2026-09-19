@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import { frontendOrigins } from './config/env.js';
+
+import { AppDataSource } from './db/data-source';
+import { frontendOrigins } from './config/env';
 
 export function createApp() {
   const app = express();
@@ -14,10 +16,18 @@ export function createApp() {
 
   app.use(express.json());
 
-  app.get('/health', (_req, res) => {
-    res.status(200).json({
-      status: 'ok',
+  app.get('/health', async (_req, res) => {
+    let database: 'ok' | 'error' = 'ok';
+    try {
+      await AppDataSource.query('SELECT 1');
+    } catch {
+      database = 'error';
+    }
+
+    res.json({
+      status: database === 'ok' ? 'ok' : 'degraded',
       service: 'travel-app-socket',
+      database,
     });
   });
 
