@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io';
 
-import { verifyAccessToken } from '../../auth/jwt.js';
+import { verifyAccessToken } from '../../auth/jwt';
 
 export interface AuthenticatedSocket extends Socket {
   data: Socket['data'] & {

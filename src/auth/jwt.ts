@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { env } from '../config/env.js';
+import { env } from '../config/env';
 import { Role, Plan } from '../common/types';
 
 export interface AccessTokenPayload {
