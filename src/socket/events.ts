@@ -7,9 +7,13 @@ export const SocketEvents = {
   ConversationJoin: 'conversation:join',
   ConversationLeave: 'conversation:leave',
   MessageSend: 'message:send',
+  TypingStart: 'typing:start',
+  TypingStop: 'typing:stop',
 
   // Server → Client
   MessageNew: 'message:new',
+  PresenceUpdate: 'presence:update',
+  PresenceSnapshot: 'presence:snapshot',
 } as const;
 
 export type SocketEventName =

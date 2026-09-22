@@ -5,6 +5,7 @@ import { ConversationParticipant } from '../../entities/ConversationParticipant.
 import type { SocketAck } from '../../common/types';
 import { SocketEvents } from '../events';
 import { conversationRoom } from '../rooms';
+import { sendPresenceSnapshot } from './presence.handlers';
 
 async function isParticipant(
   conversationId: string,
@@ -38,6 +39,7 @@ export function registerConversationHandlers(io: Server, socket: Socket) {
         }
 
         await socket.join(conversationRoom(conversationId));
+        await sendPresenceSnapshot(socket, conversationId, userId);
         return ack?.({ ok: true });
       } catch (err) {
         console.error('[socket] conversation:join failed', err);
