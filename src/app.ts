@@ -3,18 +3,17 @@ import cors from 'cors';
 
 import { AppDataSource } from './db/data-source';
 import { frontendOrigins } from './config/env';
+import { createInternalRouter } from './internal/router';
 
 export function createApp() {
   const app = express();
 
-  app.use(
-    cors({
-      origin: frontendOrigins,
-      credentials: true,
-    }),
-  );
+  // ── Internal API — mounted FIRST, tight body limit ────────────
+  app.use('/internal', express.json({ limit: '32kb' }), createInternalRouter());
 
-  app.use(express.json());
+  // ── Public API ────────────────────────────────────────────────
+  app.use(cors({ origin: frontendOrigins, credentials: true }));
+  app.use(express.json({ limit: '256kb' }));
 
   app.get('/health', async (_req, res) => {
     let database: 'ok' | 'error' = 'ok';
@@ -23,7 +22,6 @@ export function createApp() {
     } catch {
       database = 'error';
     }
-
     res.json({
       status: database === 'ok' ? 'ok' : 'degraded',
       service: 'travel-app-socket',

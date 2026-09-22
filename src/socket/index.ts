@@ -1,5 +1,6 @@
 import type { Server as HttpServer } from 'node:http';
 import { Server as SocketServer } from 'socket.io';
+import { setIo } from './instance';
 
 import { frontendOrigins } from '../config/env';
 import { authenticateSocket } from './middleware/socket-auth.middleware';
@@ -16,6 +17,7 @@ export function initSocket(httpServer: HttpServer): SocketServer {
     pingInterval: 25_000,
     pingTimeout: 20_000,
   });
+  setIo(io);
 
   io.use(authenticateSocket);
 
